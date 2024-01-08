@@ -1,13 +1,14 @@
 from typing import List, Tuple
 
 
-def collatz(n: int):
+def collatz(n: int, p: int = 3) -> int:
     """
     Berechnet den Collatz-Wert für eine gegebene natürliche Zahl.
 
     :param n: Natürliche Zahl
+    :param p: Optionaler Parameter (Default-Wert: 3)
     :return: Wenn die Zahl gerade ist, wird n/2 zurückgegeben.
-    :return: Wenn die Zahl ungerade ist, wird 3*n+1 zurückgegeben.
+    :return: Wenn die Zahl ungerade ist, wird p*n+1 zurückgegeben.
 
     >>> collatz(10)
     5
@@ -15,17 +16,17 @@ def collatz(n: int):
     16
     """
     if n % 2 == 0:
-        return int(n / 2)
+        return n // 2
+    else:
+        return p * n + 1
 
-    if n % 2 != 0:
-        return int(3 * n + 1)
 
-
-def collatz_sequence(number: int) -> List[int]:
+def collatz_sequence(number: int, p: int = 3) -> List[int]:
     """
     Erstellt die Collatz-Zahlenfolge, die von einer gegebenen Startzahl resultiert.
 
     :param number: Startzahl
+    :param p: Optionaler Parameter (Default-Wert: 3)
     :return: Collatz-Zahlenfolge, die aus n resultiert.
 
     >>> collatz_sequence(19)
@@ -33,17 +34,18 @@ def collatz_sequence(number: int) -> List[int]:
     """
     sequence = [number]
     while number != 1:
-        number = collatz(number)
+        number = collatz(number, p)
         sequence.append(number)
 
     return sequence
 
 
-def longest_collatz_sequence(n: int) -> Tuple[int, int]:
+def longest_collatz_sequence(n: int, p: int = 3) -> Tuple[int, int]:
     """
     Findet den Startwert und die Länge der längsten Collatz-Zahlenfolge, deren Startwert <= n ist.
 
     :param n: Startzahl
+    :param p: Optionaler Parameter (Default-Wert: 3)
     :return: Tuple mit dem Startwert und der Länge der längsten Collatz-Zahlenfolge.
 
     >>> longest_collatz_sequence(100)
@@ -52,7 +54,7 @@ def longest_collatz_sequence(n: int) -> Tuple[int, int]:
     max_length = 0
     start_number = 0
     for i in range(1, n + 1):
-        collatz_list = collatz_sequence(i)
+        collatz_list = collatz_sequence(i, p)
         current_length = len(collatz_list)
         if current_length > max_length:
             max_length = current_length

@@ -19,7 +19,7 @@ def is_palindrom(s: str) -> bool:
 
 def is_palindrom_sentence(s: str) -> bool:
     """
-    Überprüft, ob es sich um einen Palindromsatz handelt. Sonderzeichen und Leerzeichen werden ignoriert.
+    Überprüft, ob es sich um einen Palindromsatz handelt. Sonderzeichen und Leerzeichen werden entfernt.
 
     :param s: Eingabesatz
     :return: True, wenn es sich um einen Palindromsatz handelt, False sonst
