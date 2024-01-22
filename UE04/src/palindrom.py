@@ -1,5 +1,6 @@
 import string
 
+
 def is_palindrom(s: str) -> bool:
     """
     Überprüft, ob s ein Palindrom ist
@@ -9,12 +10,12 @@ def is_palindrom(s: str) -> bool:
 
     >>> is_palindrom("ohcelloollecho")
     True
-    >>> is_palindrom("9009")
+    >>> is_palindrom("anna")
     True
     >>> is_palindrom("hello")
     False
     """
-    return s == s[::-1]
+    return s == s[::-1]  # Python Slicing Notation
 
 
 def is_palindrom_sentence(s: str) -> bool:
@@ -33,7 +34,7 @@ def is_palindrom_sentence(s: str) -> bool:
     """
     translator = str.maketrans("", "", string.punctuation)
     result = s.translate(translator).replace(" ", "").lower()
-    return result == result[::-1]
+    return is_palindrom(result)
 
 
 def palindrom_produkt(x: int) -> int:
@@ -125,5 +126,5 @@ print(is_palindrom("ohcelloollecho"))
 print(is_palindrom("9009"))
 print(is_palindrom_sentence("Oh, Cello! oll Echo!"))
 print(palindrom_produkt(99))
-print(to_base(1234, 16))
+print(to_base(12345, 16))
 print(get_dec_hex_palindrom(1000))

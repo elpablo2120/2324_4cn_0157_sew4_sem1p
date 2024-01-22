@@ -61,3 +61,5 @@ def longest_collatz_sequence(n: int, p: int = 3) -> Tuple[int, int]:
             start_number = i
 
     return start_number, max_length
+
+print(longest_collatz_sequence(20000))
