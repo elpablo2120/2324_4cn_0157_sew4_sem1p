@@ -15,3 +15,8 @@ def encrypt(plaintext: str, key=None) -> str:
     return ciphertext
 
 
+def decrypt(plaintext: str, key=None) -> str:
+    ciphertext = ""
+    for i in plaintext:
+        ciphertext += chr((ord(i) - ord('a') - key) % 26 + ord('a'))
+    return ciphertext
