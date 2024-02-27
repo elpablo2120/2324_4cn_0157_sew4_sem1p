@@ -6,80 +6,65 @@ __copyright__ = "Copyright 2024"
 __license__ = "GPL"
 __status__ = "Development"
 """
-
-def encrypt(plaintext: str, key=None) -> str:
-    """
-    Verschlüsselt den gegebenen Klartext mithilfe des Caesar-Verschlüsselungsverfahrens.
-
-    :param plaintext: Der zu verschlüsselnde Klartext als Zeichenkette.
-    :param key: Der Verschlüsselungsschlüssel (optional, Standardwert ist None).
-    :return: Die verschlüsselte Zeichenkette.
-
-    >>> encrypt("hallo", 1)
-    'ibmmp'
-    >>> encrypt("hello", 3)
-    'khoor'
-    """
-    ciphertext = ""
-    for i in plaintext:
-        ciphertext += chr((ord(i) - ord('a') + key) % 26 + ord('a'))
-    return ciphertext
+import re
 
 
-def decrypt(plaintext: str, key=None) -> str:
-    """
-    Entschlüsselt den gegebenen Geheimtext mithilfe des Caesar-Verschlüsselungsverfahrens.
+class Caesar:
 
-    :param plaintext: Der zu entschlüsselnde Geheimtext als Zeichenkette.
-    :param key: Der Entschlüsselungsschlüssel (optional, Standardwert ist None).
-    :return: Die entschlüsselte Zeichenkette.
+    def __init__(self, key: int = 1):
+        """
+        Erzeugt eine neue Instanz der Caesar-Klasse.
+        :param key: Der Verschlüsselungsschlüssel (optional, Standardwert ist None).
+        """
+        self.key = key
 
-    >>> decrypt("ibmmp", 1)
-    'hallo'
-    >>> decrypt("khoor", 3)
-    'hello'
-    """
-    ciphertext = ""
-    for i in plaintext:
-        ciphertext += chr((ord(i) - ord('a') - key) % 26 + ord('a'))
-    return ciphertext
+    def to_lowercase_letter_only(self, plaintext: str) -> str:
+        """
+        Wandelt den plaintext in Kleinbuchstaben um und entfernt alle Zeichen, die keine
+        Kleinbuchstaben aus dem Bereich [a..z] sind.
+        >>> caesar = Caesar()
+        >>> caesar.to_lowercase_letter_only("Wandelt den plaintext in Kleinbuchstaben um und entfernt alle Zeichen, die keine Kleinbuchstaben aus dem Bereich [a..z] sind.")
+        'wandeltdenplaintextinkleinbuchstabenumundentferntallezeichendiekeinekleinbuchstabenausdembereichazsind'
+        """
+        return re.sub('[^a-z]', "", plaintext.lower())
+
+    def encrypt(self, plaintext: str, key: str = None) -> str:
+        """
+        key ist ein Buchstabe, der definiert, um wieviele Zeichen verschoben wird.
+        Falls kein key übergeben wird, nimmt übernimmt encrypt den Wert vom Property.
+        >>> caesar=Caesar("a")
+        >>> caesar.key
+        'a'
+        >>> caesar.encrypt("hallo")
+        'ibmmp'
+        >>> caesar.encrypt("hallo", "c")
+        'kdoor'
+        >>> caesar.encrypt("xyz", "c")
+        'abc'
+        """
+        if key is None:
+            key = self.key
+        if isinstance(key, str) and len(key) == 1 and key.islower():
+            key = ord(key) - ord('a') + 1
+        elif not isinstance(key, int):
+            raise ValueError("Key must be a lowercase letter or an integer")
+
+        plaintext = self.to_lowercase_letter_only(plaintext)
+        ciphertext = ""
+        for c in plaintext:
+            ciphertext += chr((ord(c) - ord('a') + key) % 26  + ord('a'))
+        return ciphertext
+
+    def decrypt(self, ciphertext: str, key: str = None) -> str:
+        pass
 
 
-def crack(plaintext: str, elements=1) -> list[str]:
-    """
-    Versucht, den Geheimtext mithilfe von Häufigkeitsanalysen zu entschlüsseln.
-
-    :param plaintext: Der zu entschlüsselnde Geheimtext als Zeichenkette.
-    :param elements: Die Anzahl der Top-Ergebnisse, die zurückgegeben werden sollen (optional, Standardwert ist 1).
-    :return: Eine Liste von Zeichenketten, die mögliche Klartexte repräsentieren.
-    """
-    # Deutsch Häufigkeitsanalyse (Quelle: https://de.wikipedia.org/wiki/Buchstabenh%C3%A4ufigkeit)
-    deutsche_haeufigkeiten = {'e': 17.4, 'n': 9.8, 'i': 7.6, 's': 7.3, 'r': 7.0,
-                              'a': 6.2, 't': 6.1, 'd': 5.5, 'h': 5.1, 'u': 4.2,
-                              'l': 3.4, 'c': 3.0, 'g': 3.0, 'm': 2.5, 'o': 2.4,
-                              'b': 1.9, 'w': 1.9, 'f': 1.6, 'k': 1.6, 'z': 1.1,
-                              'p': 0.7, 'v': 0.7, 'j': 0.3, 'y': 0.1, 'x': 0.1, 'q': 0.0}
-
-    gesamt_haeufigkeit = sum(deutsche_haeufigkeiten.values())
-
-    ergebnis = []
-    for schluessel in range(26):
-        entschluesselter_text = decrypt(plaintext, schluessel)
-
-        entschluesselte_haeufigkeiten = {char: entschluesselter_text.count(char) / len(entschluesselter_text) * 100
-                                          for char in deutsche_haeufigkeiten}
-
-        aehnlichkeit = sum(abs(deutsche_haeufigkeiten[char] - entschluesselte_haeufigkeiten[char])
-                           for char in deutsche_haeufigkeiten) / gesamt_haeufigkeit
-
-        ergebnis.append((schluessel, entschluesselter_text, aehnlichkeit))
-
-    ergebnis.sort(key=lambda x: x[2])
-
-    return [item[1] for item in ergebnis[:elements]]
 
 
 # Beispielanwendungen
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
+    ceasar = Caesar()
+    print(ceasar.encrypt("hallo"))
