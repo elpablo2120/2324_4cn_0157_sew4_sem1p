@@ -186,7 +186,6 @@ if __name__ == "__main__":
     print(ceasar.decrypt("ibmmp"))
     print(ceasar.crack("ibmmp"))
 
-    viginere = Vigenere("hugo")
-    print(viginere.encrypt("hallo"))
-    print(viginere.decrypt("ourzv"))
-    print(ceasar.crack("ourzv"))
+    vigenere = Vigenere("hugo")
+    print(vigenere.encrypt("hallo"))
+    print(vigenere.decrypt("ourzv"))
