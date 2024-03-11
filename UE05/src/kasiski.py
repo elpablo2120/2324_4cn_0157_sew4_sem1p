@@ -7,6 +7,7 @@ __license__ = "GPL"
 __status__ = "Development"
 """
 import re
+from collections import Counter
 from typing import List
 
 
@@ -33,20 +34,20 @@ class Caesar:
         """
         key ist ein Buchstabe, der definiert, um wieviele Zeichen verschoben wird.
         Falls kein key übergeben wird, nimmt übernimmt encrypt den Wert vom Property.
-        >>> caesar=Caesar("a")
+        >>> caesar=Caesar("b")
         >>> caesar.key
-        'a'
+        'b'
         >>> caesar.encrypt("hallo")
         'ibmmp'
         >>> caesar.encrypt("hallo", "c")
-        'kdoor'
+        'jcnnq'
         >>> caesar.encrypt("xyz", "c")
-        'abc'
+        'zab'
         """
         if key is None:
             key = self.key
         if isinstance(key, str) and len(key) == 1 and key.islower():
-            key = ord(key) - ord('a') + 1
+            key = ord(key) - ord('a')
         elif not isinstance(key, int):
             raise ValueError("Key must be a lowercase letter or an integer")
 
@@ -60,20 +61,20 @@ class Caesar:
         """
         key ist ein Buchstabe, der definiert, um wieviele Zeichen verschoben wird.
         Falls kein key übergeben wird, nimmt übernimmt decrypt den Wert vom Property.
-        >>> caesar=Caesar("a")
+        >>> caesar=Caesar("b")
         >>> caesar.key
-        'a'
+        'b'
         >>> caesar.decrypt("ibmmp")
         'hallo'
-        >>> caesar.decrypt("kdoor", "c")
+        >>> caesar.decrypt("jcnnq", "c")
         'hallo'
-        >>> caesar.decrypt("abc", "c")
+        >>> caesar.decrypt("zab", "c")
         'xyz'
         """
         if key is None:
             key = self.key
         if isinstance(key, str) and len(key) == 1 and key.islower():
-            key = ord(key) - ord('a') + 1
+            key = ord(key) - ord('a')
         elif not isinstance(key, int):
             raise ValueError("Key must be a lowercase letter or an integer")
 
@@ -100,19 +101,15 @@ class Caesar:
         >>> caesar.crack(crypted, 3)
         ['y', 'h', 'l']
         """
-        crypttext = self.to_lowercase_letter_only(crypttext)
-        possible_keys = []
-        frequencies = {}
-        for char in crypttext:
-            frequencies[char] = frequencies.get(char, 0) + 1
-        sorted_frequencies = sorted(frequencies.items(), key=lambda x: x[1], reverse=True)
-        most_common_char_crypt = sorted_frequencies[0][0]
-        for most_common_char in "etaoinshrdlcumwfgypbvkjxqz":
-            key = (ord(most_common_char_crypt) - ord(most_common_char)) % 26
-            decrypted_text = self.decrypt(crypttext, key)
-            possible_keys.append(decrypted_text)
+        if not isinstance(elements, int):
+            raise ValueError("elements must be an integer.")
+        elif elements < 1:
+            raise ValueError("elements must be greater than 0")
+        elif elements > 26:
+            elements = 26
 
-        return possible_keys[:elements]
+        return [self.decrypt(key, 'e') for key, _ in
+                Counter(self.to_lowercase_letter_only(crypttext)).most_common(elements)]
 
 
 # Beispielanwendungen
