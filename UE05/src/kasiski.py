@@ -12,6 +12,9 @@ from typing import List
 
 
 class Caesar:
+    """
+    Caesar cipher class.
+    """
 
     def __init__(self, key: int = 1):
         """
@@ -24,6 +27,8 @@ class Caesar:
         """
         Wandelt den plaintext in Kleinbuchstaben um und entfernt alle Zeichen, die keine
         Kleinbuchstaben aus dem Bereich [a..z] sind.
+        :param plaintext: Der zu bereinigende Klartext als Zeichenkette.
+        :return: Der bereinigte Klartext als Zeichenkette.
         >>> caesar = Caesar()
         >>> caesar.to_lowercase_letter_only("Wandelt den plaintext in Kleinbuchstaben um und entfernt alle Zeichen, die keine Kleinbuchstaben aus dem Bereich [a..z] sind.")
         'wandeltdenplaintextinkleinbuchstabenumundentferntallezeichendiekeinekleinbuchstabenausdembereichazsind'
@@ -34,6 +39,9 @@ class Caesar:
         """
         key ist ein Buchstabe, der definiert, um wieviele Zeichen verschoben wird.
         Falls kein key übergeben wird, nimmt übernimmt encrypt den Wert vom Property.
+        :param plaintext: Der zu verschlüsselnde Klartext als Zeichenkette.
+        :param key: Der Verschlüsselungsschlüssel (optional, Standardwert ist None).
+        :return: Der Geheimtext als Zeichenkette.
         >>> caesar=Caesar("b")
         >>> caesar.key
         'b'
@@ -61,6 +69,9 @@ class Caesar:
         """
         key ist ein Buchstabe, der definiert, um wieviele Zeichen verschoben wird.
         Falls kein key übergeben wird, nimmt übernimmt decrypt den Wert vom Property.
+        :param ciphertext: Der zu entschlüsselnde Geheimtext als Zeichenkette.
+        :param key: Der Verschlüsselungsschlüssel (optional, Standardwert ist None).
+        :return: Der Klartext als Zeichenkette.
         >>> caesar=Caesar("b")
         >>> caesar.key
         'b'
@@ -87,7 +98,6 @@ class Caesar:
     def crack(self, crypttext: str, elements: int = 1) -> List[str]:
         """
         Versucht, den Geheimtext mithilfe von Häufigkeitsanalysen zu entschlüsseln. Zr hilfe wird die häufigkeitsanalyse gezogen.
-
         :param crypttext: Der zu entschlüsselnde Geheimtext als Zeichenkette.
         :param elements: Die Anzahl der Top-Ergebnisse, die zurückgegeben werden sollen (optional, Standardwert ist 1).
         :return: Eine Liste von Zeichenketten, die mögliche Klartexte repräsentieren.
@@ -112,6 +122,60 @@ class Caesar:
                 Counter(self.to_lowercase_letter_only(crypttext)).most_common(elements)]
 
 
+class Vigenere:
+    """
+    Vigenere cipher class.
+    """
+
+    def __init__(self, key: str = "a"):
+        """
+        Konstruktor der Klasse Vigenere.
+        :param key: Schlüssel für die Verschlüsselung (optional, Standardwert ist "a").
+        """
+        self.key = key
+
+    def encrypt(self, plaintext: str, key: str = None) -> str:
+        """
+        Verschlüsselt den gegebenen Klartext mit Vigenere und dem gegebenen Schlüssel.
+        :param plaintext: Der zu verschlüsselnde Klartext als Zeichenkette.
+        :param key: Der Verschlüsselungsschlüssel (optional, Standardwert ist None).
+        :return: Der Geheimtext als Zeichenkette.
+        >>> vigenere = Vigenere("b"); vigenere.key
+        'b'
+        >>> vigenere2 = Vigenere("hugo");vigenere2.encrypt("Hallo, wie geht es dir?")
+        'ourzvqosnynhlmjwy'
+        >>> vigenere2 = Vigenere("SPAM");vigenere2.encrypt("HalloWELT")
+        'zplxglexl'
+        """
+
+        if key is None:
+            key = self.key
+
+        key = key.lower()
+        caesar = Caesar()
+        plaintext = caesar.to_lowercase_letter_only(plaintext)
+        return ''.join([caesar.encrypt(plaintext[i], key[i % len(key)]) for i in range(len(plaintext))])
+
+    def decrypt(self, crypttext: str, key: str = None) -> str:
+        """
+        Decrypts the given crypttext with Vigenere and the given key.
+        :param crypttext: Der zu entschlüsselnde Geheimtext als Zeichenkette.
+        :param key: Der Verschlüsselungsschlüssel (optional, Standardwert ist None).
+        :return: Der Klartext als Zeichenkette.
+        >>> vigenere = Vigenere("b"); vigenere.key
+        'b'
+        >>> vigenere2 = Vigenere("hugo");vigenere2.decrypt("ourzvqosnynhlmjwy")
+        'hallowiegehtesdir'
+        """
+
+        if key is None:
+            key = self.key
+
+        key = key.lower()
+        caesar = Caesar()
+        return ''.join([caesar.decrypt(crypttext[i], key[i % len(key)]) for i in range(len(crypttext))])
+
+
 # Beispielanwendungen
 if __name__ == "__main__":
     import doctest
@@ -121,3 +185,8 @@ if __name__ == "__main__":
     print(ceasar.encrypt("hallo"))
     print(ceasar.decrypt("ibmmp"))
     print(ceasar.crack("ibmmp"))
+
+    viginere = Vigenere("hugo")
+    print(viginere.encrypt("hallo"))
+    print(viginere.decrypt("ourzv"))
+    print(ceasar.crack("ourzv"))
