@@ -21,6 +21,7 @@ def read_all_words(filename: str) -> set:
         with open(filename, 'r', encoding='utf-8') as file:
             for line in file:
                 words = line.split()
+                words = {word.lower() for word in words}
                 word_set.update(words)
     except FileNotFoundError:
         print(f'Die Datei {filename} wurde nicht gefunden.')
@@ -92,58 +93,32 @@ def edit2_good(wort: str, alle_woerter: List[str]) -> Set[str]:
     return valid_edit2_words
 
 def correct(word: str, alle_woerter: List[str]) -> Set[str]:
-    """
-    Find the correction(s) for the given word based on the specified criteria:
-    - If the word is in the word list, return a set with the word.
-    - If at least one word with Edit-Distance one is in the word list, return a set of those words.
-    - If at least one word with Edit-Distance two is in the word list, return a set of those words.
-    - If the word is unknown or has too many errors, return a set with the original word.
+    '''
+    Findet Korrekturen in einer Liste.
+    Entweder:
+    - das Wort ist im Wörterbuch (Ergebnis: eine Liste mit einem Eintrag word)
+    - oder (mindestens) ein Wort mit Edit-Distanz eins ist im Wörterbuch (Ergebnis: Liste dieser Wörter)
+    - oder (mindestens) ein Wort mit Edit-Distanz zwei ist im Wörterbuch (Ergebnis: Liste dieser Wörter)
+    - oder wir haben keine Idee (zu viele Fehler oder unbekanntes Wort): liefere eine Liste mit dem ursprünglichen Wort
+    :param word:
+    :param alle_woerter:
+    :return:
 
-    :param word: The input word to be corrected.
-    :param alle_woerter: The list of all words in the dictionary.
-    :return: A set of corrected words based on the specified criteria.
-    """
-    # Check if the word is in the word list
-    if word.lower() in alle_woerter:
-        return {word.lower()}
+    '''
+    if word in alle_woerter:
+        return {word}
 
-    # Check for Edit-Distance one corrections
-    edit1_result = edit1(word.lower())
-    valid_edit1_words = set(edit1_result) & set(alle_woerter)
-    if valid_edit1_words:
-        return valid_edit1_words
+    corrections_edit1 = edit1_good(word, alle_woerter)
 
-    # Check for Edit-Distance two corrections
-    edit2_result = edit2_good(word.lower(), alle_woerter)
-    if edit2_result:
-        return edit2_result
+    corrections_edit2 = edit2_good(word, alle_woerter)
 
-    # Return the original word if no corrections are found
-    return {word.lower()}
+    return corrections_edit1 or corrections_edit2 or {word}
 
-# Additional improvement: Sorting corrections based on word frequencies in the dictionary
-def correct_sorted(word: str, alle_woerter: List[str]) -> List[str]:
-    """
-    Find the correction(s) for the given word and sort them based on word frequencies.
 
-    :param word: The input word to be corrected.
-    :param alle_woerter: The list of all words in the dictionary.
-    :param frequencies: A Counter object containing word frequencies.
-    :return: A sorted list of corrected words based on frequencies.
-    """
-    corrections = list(correct(word, alle_woerter))
 
-    # Sort the corrections based on word frequencies
-    sorted_corrections = sorted(corrections, key=lambda , reverse=True)
-
-    return sorted_corrections
 
 filename = '/Users/paulwaldecker/Desktop/HTL3R/4CN/SEW/Angaben/06_py_comprehension/de-en.txt'
 word_set = read_all_words(filename)
+print(correct('alsupe', word_set))
+print(edit2_good('alsupe', word_set))
 
-
-print(correct('haloo', word_set))
-
-print(correct_sorted("Aalsuppe", word_set, ))  # Output: {'aalsuppe'}
-print(correct_sorted("Alsuppe", word_set))  # Output: {'aalsuppe'}
-print(sorted(correct_sorted("Alsupe", word_set)))  # Output: ['aalsuppe', 'absude', 'alse', 'lupe']
