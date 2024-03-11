@@ -97,5 +97,5 @@ word_set = read_all_words(filename)
 #print(split_word('abc'))
 #print(word_set)
 
-resultedit2 = edit2_good('haallo', word_set)
+resultedit2 = edit2_good('hhallo', word_set)
 print(resultedit2)
