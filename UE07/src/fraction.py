@@ -47,9 +47,37 @@ class Bruch:
     def __repr__(self):
         return f"Bruch({self._zaehler}, {self._nenner})"
 
+    def __add__(self, otherfraction):
+        neuer_nenner = self._nenner * otherfraction._nenner
+        neuer_zaehler = self._zaehler * otherfraction._nenner + otherfraction._zaehler * self._nenner
+        return Bruch(neuer_zaehler, neuer_nenner)
+
+    def __sub__(self, otherfraction):
+        neuer_nenner = self._nenner * otherfraction._nenner
+        neuer_zaehler = self._zaehler * otherfraction._nenner - otherfraction._zaehler * self._nenner
+        return Bruch(neuer_zaehler, neuer_nenner)
+
+    def __mul__(self, otherfraction):
+        neuer_nenner = self._nenner * otherfraction._nenner
+        neuer_zaehler = self._zaehler * otherfraction._zaehler
+        return Bruch(neuer_zaehler, neuer_nenner)
+
+    def __truediv__(self, otherfraction):
+        neuer_nenner = self._nenner * otherfraction._zaehler
+        neuer_zaehler = self._zaehler * otherfraction._nenner
+        return Bruch(neuer_zaehler, neuer_nenner)
+
 # Beispielverwendung
+#print('Anwendung:')
+#b1 = Bruch(3, 6)
+#print(b1)  # Ausgabe: 1/2
+#b2 = Bruch(7)
+#print(b2)  # Ausgabe: 7
+
 print('Anwendung:')
 b1 = Bruch(3, 6)
-print(b1)  # Ausgabe: 1/2
-b2 = Bruch(7)
-print(b2)  # Ausgabe: 7
+b2 = Bruch(1, 3)
+print(b1 + b2)  # Ausgabe: 5/6
+print(b1 - b2)  # Ausgabe: 1/6
+print(b1 * b2)  # Ausgabe: 1/6
+print(b1 / b2)  # Ausgabe: 1 1/2
