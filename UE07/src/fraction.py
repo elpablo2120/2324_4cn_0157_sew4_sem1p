@@ -1,83 +1,80 @@
-class Bruch:
+class Fraction:
     '''
-    Klasse zur Repräsentation von Brüchen.
+    Class to represent fractions.
     '''
-    def __init__(self, zaehler=0, nenner=1):
+    def __init__(self, numerator=0, denominator=1):
         """
-        Klasse zur Repräsentation von Brüchen.
-        :param zaehler: Der Zähler des Bruchs (optional, Standardwert ist 0).
-        :param nenner: Der Nenner des Bruchs (optional, Standardwert ist 1).
-        :raise ArithmeticError: Wenn der Nenner 0 ist.
-        :return: Ein gekürztes Bruch-Objekt.
-        >>> b1 = Bruch(3, -6); str(b1)
+        Class to represent fractions.
+        :param numerator: The numerator of the fraction (optional, default is 0).
+        :param denominator: The denominator of the fraction (optional, default is 1).
+        :raise ArithmeticError: If the denominator is 0.
+        :return: A simplified Fraction object.
+        >>> f1 = Fraction(3, -6); str(f1)
         '-1/2'
-        >>> b2 = Bruch(7); str(b2)
+        >>> f2 = Fraction(7); str(f2)
         '7'
-        >>> b3 = Bruch(6,3); str(b3)
+        >>> f3 = Fraction(6,3); str(f3)
         '2'
         """
-        if nenner == 0:
-            raise ArithmeticError("Nenner darf nicht null sein.")
-        self._zaehler = zaehler
-        self._nenner = nenner
-        self._kuerzen()
+        if denominator == 0:
+            raise ArithmeticError("Denominator cannot be zero.")
+        self._numerator = numerator
+        self._denominator = denominator
+        self._simplify()
 
-    def _kuerzen(self):
-        ggT = self._ggT(self._zaehler, self._nenner)
-        self._zaehler //= ggT
-        self._nenner //= ggT
+    def numerator(self):
+        return self._numerator
 
-    def _ggT(self, a, b):
+    def _simplify(self):
+        gcd = self._gcd(self._numerator, self._denominator)
+        self._numerator //= gcd
+        self._denominator //= gcd
+
+    def _gcd(self, a, b):
         while b != 0:
             a, b = b, a % b
         return a
 
     def __str__(self):
-        if self._zaehler == 0:
+        if self._numerator == 0:
             return '0'
-        elif self._nenner == 1:
-            return str(self._zaehler)
-        elif abs(self._zaehler) < abs(self._nenner):
-            return f"{self._zaehler}/{self._nenner}"
+        elif self._denominator == 1:
+            return str(self._numerator)
+        elif abs(self._numerator) < abs(self._denominator):
+            return f"{self._numerator}/{self._denominator}"
         else:
-            ganze_teil = self._zaehler // self._nenner
-            rest = abs(self._zaehler) % abs(self._nenner)
-            return f"{ganze_teil} {rest}/{self._nenner}"
+            whole_part = self._numerator // self._denominator
+            remainder = abs(self._numerator) % abs(self._denominator)
+            return f"{whole_part} {remainder}/{self._denominator}"
 
     def __repr__(self):
-        return f"Bruch({self._zaehler}, {self._nenner})"
+        return f"Fraction({self._numerator}, {self._denominator})"
 
-    def __add__(self, otherfraction):
-        neuer_nenner = self._nenner * otherfraction._nenner
-        neuer_zaehler = self._zaehler * otherfraction._nenner + otherfraction._zaehler * self._nenner
-        return Bruch(neuer_zaehler, neuer_nenner)
+    def __add__(self, other_fraction):
+        new_denominator = self._denominator * other_fraction._denominator
+        new_numerator = self._numerator * other_fraction._denominator + other_fraction._numerator * self._denominator
+        return Fraction(new_numerator, new_denominator)
 
-    def __sub__(self, otherfraction):
-        neuer_nenner = self._nenner * otherfraction._nenner
-        neuer_zaehler = self._zaehler * otherfraction._nenner - otherfraction._zaehler * self._nenner
-        return Bruch(neuer_zaehler, neuer_nenner)
+    def __sub__(self, other_fraction):
+        new_denominator = self._denominator * other_fraction._denominator
+        new_numerator = self._numerator * other_fraction._denominator - other_fraction._numerator * self._denominator
+        return Fraction(new_numerator, new_denominator)
 
-    def __mul__(self, otherfraction):
-        neuer_nenner = self._nenner * otherfraction._nenner
-        neuer_zaehler = self._zaehler * otherfraction._zaehler
-        return Bruch(neuer_zaehler, neuer_nenner)
+    def __mul__(self, other_fraction):
+        new_numerator = self._numerator * other_fraction._numerator
+        new_denominator = self._denominator * other_fraction._denominator
+        return Fraction(new_numerator, new_denominator)
 
-    def __truediv__(self, otherfraction):
-        neuer_nenner = self._nenner * otherfraction._zaehler
-        neuer_zaehler = self._zaehler * otherfraction._nenner
-        return Bruch(neuer_zaehler, neuer_nenner)
+    def __truediv__(self, other_fraction):
+        new_numerator = self._numerator * other_fraction._denominator
+        new_denominator = self._denominator * other_fraction._numerator
+        return Fraction(new_numerator, new_denominator)
 
-# Beispielverwendung
-#print('Anwendung:')
-#b1 = Bruch(3, 6)
-#print(b1)  # Ausgabe: 1/2
-#b2 = Bruch(7)
-#print(b2)  # Ausgabe: 7
-
-print('Anwendung:')
-b1 = Bruch(3, 6)
-b2 = Bruch(1, 3)
-print(b1 + b2)  # Ausgabe: 5/6
-print(b1 - b2)  # Ausgabe: 1/6
-print(b1 * b2)  # Ausgabe: 1/6
-print(b1 / b2)  # Ausgabe: 1 1/2
+# Example usage
+print('Usage:')
+f1 = Fraction(3, 6)
+f2 = Fraction(1, 3)
+print(f1 + f2)  # Output: 5/6
+print(f1 - f2)  # Output: 1/6
+print(f1 * f2)  # Output: 1/6
+print(f1 / f2)  # Output: 1 1/2
