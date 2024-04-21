@@ -1,4 +1,3 @@
-
 class Fraction:
     '''
     Eine Klasse, die Brüche repräsentiert.
@@ -11,6 +10,7 @@ class Fraction:
     :meth:`__truediv__` Dividiert zwei Brüche.
     :meth:`__float__` Gibt den Bruch als Gleitkommazahl zurück.
     '''
+
     def __init__(self, numerator=0, denominator=1):
         """
         Initialisiert ein Fraction-Objekt.
@@ -121,7 +121,6 @@ class Fraction:
         >>> f = Fraction(10, 1)
         >>> print(f)
         10
-
         """
         if self._numerator == 0:
             return '0'
@@ -161,8 +160,8 @@ class Fraction:
         >>> print(f6)
         1
         """
-        new_denominator = self._denominator * other_fraction._denominator
-        new_numerator = self._numerator * other_fraction._denominator + other_fraction._numerator * self._denominator
+        new_denominator = self._denominator * other_fraction._numerator
+        new_numerator = self._numerator * other_fraction._denominator
         return Fraction(new_numerator, new_denominator)
 
     def __sub__(self, other_fraction):
@@ -253,11 +252,7 @@ class Fraction:
         """
         return self._numerator / self._denominator
 
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-    print('Usage:')
-    f1 = Fraction(-2, 4)
-    f2 = Fraction(1, 3)
-    print(f1 / f2)  # Output: 1 1/2
-
