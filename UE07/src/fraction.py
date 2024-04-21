@@ -22,8 +22,23 @@ class Fraction:
         self._denominator = denominator
         self._simplify()
 
+    @property
     def numerator(self):
         return self._numerator
+
+    @property
+    def denominator(self):
+        return self._denominator
+
+    @numerator.setter
+    def numerator(self, value):
+        self._numerator = value
+        self._simplify()
+
+    @denominator.setter
+    def denominator(self, value):
+        self._denominator = value
+        self._simplify()
 
     def _simplify(self):
         gcd = self._gcd(self._numerator, self._denominator)
@@ -70,11 +85,15 @@ class Fraction:
         new_denominator = self._denominator * other_fraction._numerator
         return Fraction(new_numerator, new_denominator)
 
+
 # Example usage
 print('Usage:')
-f1 = Fraction(3, 6)
-f2 = Fraction(1, 3)
+f1 = Fraction(-31, 62)
+f2 = Fraction(-1, )
 print(f1 + f2)  # Output: 5/6
 print(f1 - f2)  # Output: 1/6
 print(f1 * f2)  # Output: 1/6
 print(f1 / f2)  # Output: 1 1/2
+
+print(f1.numerator)
+print(f1.denominator)
