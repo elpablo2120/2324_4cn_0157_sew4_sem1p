@@ -85,15 +85,16 @@ class Fraction:
         new_denominator = self._denominator * other_fraction._numerator
         return Fraction(new_numerator, new_denominator)
 
-
+    def __float__(self):
+        return self._numerator / self._denominator
 # Example usage
 print('Usage:')
-f1 = Fraction(-31, 62)
-f2 = Fraction(-1, )
-print(f1 + f2)  # Output: 5/6
-print(f1 - f2)  # Output: 1/6
-print(f1 * f2)  # Output: 1/6
-print(f1 / f2)  # Output: 1 1/2
+f1 = Fraction(100, 109)
+#f2 = Fraction(-1, )
+#print(f1 + f2)  # Output: 5/6
+#print(f1 - f2)  # Output: 1/6
+#print(f1 * f2)  # Output: 1/6
+#print(f1 / f2)  # Output: 1 1/2
 
-print(f1.numerator)
-print(f1.denominator)
+#print(f1.numerator)
+print(float(f1)) # Output: 0.9174311926605505
