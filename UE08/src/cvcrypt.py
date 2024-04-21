@@ -15,7 +15,28 @@ def parse_args():
     parser.add_argument('-k', '--key', type=str, required=True, help='Verschlüsselung-Key')
     return parser.parse_args()
 
+def main():
+    args = parse_args()
+    cipher = kasiski.Caesar() if args.cipher in ['caesar', 'c'] else kasiski.Vigenere()
 
+    try:
+        with open(args.infile, 'r') as f:
+            plaintext = f.read()
+        if args.decrypt:
+            crypttext = cipher.decrypt(plaintext, args.key)
+        else:
+            crypttext = cipher.encrypt(plaintext, args.key)
+
+        with open(args.outfile, 'w') as f:
+            f.write(crypttext)
+
+        if args.verbose:
+            print(
+                f"{'Decrypting' if args.decrypt else 'Encrypting'} {args.cipher.title()} with key = {args.key} from file {args.infile} into file {args.outfile or args.infile}")
+
+    except FileNotFoundError:
+        print(f"{args.infile}: No such file or directory", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
