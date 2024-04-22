@@ -297,9 +297,6 @@ class Fraction:
 
 
 if __name__ == '__main__':
-    f1 = Fraction(-1, 2)
-    f2 = Fraction(-1, -3)
-    print(f1 / f2)
     import doctest
 
     doctest.testmod()

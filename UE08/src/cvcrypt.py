@@ -1,23 +1,28 @@
 import sys
 import argparse
-import kasiski
+from Kasiski import Kasiski
+from Caesar import Caesar
+from Vigenere import Vigenere
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Verschlüsselt oder entschlüsselt eine Datei mit einer Caesar- oder Vigenère-Chiffre.")
     parser.add_argument("infile", type=str, help="Zu verschlüsselnde Datei")
     parser.add_argument("outfile", type=str, nargs='?',  help="Zieldatei")
+
+    output_group = parser.add_mutually_exclusive_group()
+    crypto_group = parser.add_mutually_exclusive_group()
     parser.add_argument('-c', '--cipher', choices=['caesar', 'c', 'vigenere', 'v'], required=True,
                         help='Zu verwendende Chiffre')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Ausführliche Ausgabe')
-    parser.add_argument('-q', '--quiet', action='store_true', help='Stiller Modus, unterdrücke Ausgabe')
-    parser.add_argument('-d', '--decrypt', action='store_true', help='Entschlüssle die Eingabe')
-    parser.add_argument('-e', '--encrypt', action='store_true', help='Verschlüssele die Eingabe')
+    output_group.add_argument('-v', '--verbose', action='store_true', help='Ausführliche Ausgabe')
+    output_group.add_argument('-q', '--quiet', action='store_true', help='Stiller Modus, unterdrücke Ausgabe')
+    crypto_group.add_argument('-d', '--decrypt', action='store_true', help='Entschlüssle die Eingabe')
+    crypto_group.add_argument('-e', '--encrypt', action='store_true', help='Verschlüssele die Eingabe')
     parser.add_argument('-k', '--key', type=str, required=True, help='Verschlüsselung-Key')
     return parser.parse_args()
 
 def main():
     args = parse_args()
-    cipher = kasiski.Caesar() if args.cipher in ['caesar', 'c'] else kasiski.Vigenere()
+    cipher = Caesar() if args.cipher in ['caesar', 'c'] else Vigenere()
 
     try:
         with open(args.infile, 'r') as f:
