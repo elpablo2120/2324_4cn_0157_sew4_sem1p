@@ -131,7 +131,10 @@ class Fraction:
         else:
             whole_part = self._numerator // self._denominator
             remainder = abs(self._numerator) % abs(self._denominator)
-            return f"{whole_part} {remainder}/{self._denominator}"
+            if remainder == 0:
+                return str(whole_part)
+            else:
+                return f"{whole_part} {remainder}/{self._denominator}"
 
     def __repr__(self):
         """
@@ -160,8 +163,8 @@ class Fraction:
         >>> print(f6)
         1
         """
-        new_denominator = self._denominator * other_fraction._numerator
-        new_numerator = self._numerator * other_fraction._denominator
+        new_numerator = self._numerator * other_fraction._denominator + other_fraction._numerator * self._denominator
+        new_denominator = self._denominator * other_fraction._denominator
         return Fraction(new_numerator, new_denominator)
 
     def __sub__(self, other_fraction):
@@ -232,6 +235,7 @@ class Fraction:
         >>> print(f6)
         -1
         >>> f7 = f3 / f4
+        >>> print(f3)
         >>> print(f7)
         -1 1/2
         >>> f8 = f3 / f3
