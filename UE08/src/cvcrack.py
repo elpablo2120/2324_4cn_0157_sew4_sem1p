@@ -1,3 +1,11 @@
+"""
+__author__ = "Paul Waldecker"
+__email__ = "0157@htl.rennweg.at"
+__version__ = "1.8"
+__copyright__ = "Copyright 2024"
+__license__ = "GPL"
+__status__ = "Development"
+"""
 import argparse
 import sys
 import os
@@ -19,13 +27,10 @@ def main():
             key = cipher.crack(plaintext)
             key = ''.join(key)
 
-            if args.quiet:
-                print(key)
-            else:
-                print(f"Cracking {args.cipher.title()}-encrypted file {args.infile}: Key = {key}")
-
             if args.verbose:
-                print(f"Verbose output: {key}")
+                print(f"Cracking {args.cipher.title()}-encrypted file {args.infile}: Key = {key}")
+            else:
+                print(key)
 
             if args.outfile:
                 with open(args.outfile, 'w') as f:
@@ -35,7 +40,10 @@ def main():
             len = cipher.ggt_count([cipher.dist_n_list(plaintext, i) for i in range(3, 10)][0]).most_common(1)[0][0]
             key = cipher.crack_key(len)
 
-            print(key)
+            if args.verbose:
+                print(f"Cracking {args.cipher.title()}-encrypted file {args.infile}: Key = {key}")
+            else:
+                print(key)
 
 
 
@@ -49,7 +57,6 @@ def main():
 def parse_args():
     parser = argparse.ArgumentParser(description="Crack Caesar or Vigenere ciphers.")
     parser.add_argument("infile", type=str, help="File to crack")
-    parser.add_argument("outfile", type=str, nargs='?', help="Output file")
     parser.add_argument('-c', '--cipher', choices=['caesar', 'c', 'vigenere', 'v'], default='c',
                         help='Cipher to use')
     parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')

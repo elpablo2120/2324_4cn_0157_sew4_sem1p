@@ -1,3 +1,12 @@
+"""
+__author__ = "Paul Waldecker"
+__email__ = "0157@htl.rennweg.at"
+__version__ = "1.4"
+__copyright__ = "Copyright 2024"
+__license__ = "GPL"
+__status__ = "Development"
+"""
+
 import sys
 import argparse
 from Kasiski import Kasiski

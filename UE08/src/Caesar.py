@@ -1,6 +1,11 @@
-__author__ = "Paul"
-__version__ = "1.8"
+"""
+__author__ = "Paul Waldecker"
+__email__ = "0157@htl.rennweg.at"
+__version__ = "3.0"
+__copyright__ = "Copyright 2024"
+__license__ = "GPL"
 __status__ = "Finished"
+"""
 
 
 import re
