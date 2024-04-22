@@ -1,15 +1,32 @@
+"""
+__author__ = "Paul Waldecker"
+__email__ = "0157@htl.rennweg.at"
+__version__ = "1.3"
+__copyright__ = "Copyright 2024"
+__license__ = "GPL"
+__status__ = "Development"
+"""
+
+
 class Fraction:
-    '''
+    """
     Eine Klasse, die Brüche repräsentiert.
     :meth:`__init__` Initialisiert ein Fraction-Objekt.
     :meth:`__str__` Gibt den Bruch als Zeichenkette zurück.
     :meth:`__repr__` Gibt eine Repräsentation des Bruchs zurück.
     :meth:`__add__` Addiert zwei Brüche.
+    :meth:`__radd__` Verweist auf Addition. Wird genutzt um Bruch mit int zu addieren.
     :meth:`__sub__` Subtrahiert zwei Brüche.
     :meth:`__mul__` Multipliziert zwei Brüche.
     :meth:`__truediv__` Dividiert zwei Brüche.
     :meth:`__float__` Gibt den Bruch als Gleitkommazahl zurück.
-    '''
+    :meth:`_simplify` Vereinfacht den Bruch.
+    :meth:`_gcd` Berechnet den größten gemeinsamen Teiler von a und b.
+    :meth:`numerator` Getter für den Zähler des Bruchs.
+    :meth:`denominator` Getter für den Nenner des Bruchs.
+    :meth:`numerator` Setter für den Zähler des Bruchs.
+    :meth:`denominator` Setter für den Nenner des Bruchs.
+    """
 
     def __init__(self, numerator=0, denominator=1):
         """
@@ -145,10 +162,10 @@ class Fraction:
         """
         return f"Fraction({self._numerator}, {self._denominator})"
 
-    def __add__(self, other_fraction):
+    def __add__(self, other):
         """
         Addiert zwei Brüche.
-        :param other_fraction: Der Bruch, der addiert werden soll.
+        :param other: Der Bruch, der addiert werden soll.
         :return: addierter Bruch.
         >>> f1 = Fraction(1, 2)
         >>> f2 = Fraction(1, 3)
@@ -162,10 +179,31 @@ class Fraction:
         >>> f6 = f1 + f1
         >>> print(f6)
         1
+        >>> f7 = f1 + 1
+        >>> print(f7)
+        1 1/2
+        >>> f8 = -1 + f1
+        >>> print(f8)
+        -1/2
         """
-        new_numerator = self._numerator * other_fraction._denominator + other_fraction._numerator * self._denominator
-        new_denominator = self._denominator * other_fraction._denominator
-        return Fraction(new_numerator, new_denominator)
+
+        if isinstance(other, int):
+            other = Fraction(other, 1)
+
+        if isinstance(other, Fraction):
+            new_numerator = self._numerator * other._denominator + other._numerator * self._denominator
+            new_denominator = self._denominator * other._denominator
+            return Fraction(new_numerator, new_denominator)
+        else:
+            raise NotImplementedError
+
+    def __radd__(self, other):
+        """
+        Verweist auf Addition. Wird genutzt um Bruch mit int zu addieren.
+        :param other: Bruch oder int.
+        :return: addierter Bruch.
+        """
+        return self.__add__(other)
 
     def __sub__(self, other_fraction):
         """
@@ -235,7 +273,8 @@ class Fraction:
         >>> print(f6)
         -1
         >>> f7 = f3 / f4
-        >>> print(f3)
+        >>> print(f4)
+        1/3
         >>> print(f7)
         -1 1/2
         >>> f8 = f3 / f3
@@ -258,5 +297,10 @@ class Fraction:
 
 
 if __name__ == '__main__':
+    f1 = Fraction(-1, 2)
+    f2 = Fraction(-1, -3)
+    print(f1 / f2)
     import doctest
+
     doctest.testmod()
+
