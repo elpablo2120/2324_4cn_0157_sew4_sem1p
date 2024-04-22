@@ -145,9 +145,25 @@ class Fraction:
             return str(self._numerator)
         elif abs(self._numerator) < abs(self._denominator):
             return f"{self._numerator}/{self._denominator}"
+        elif self._numerator < 0 and self._denominator > 0:
+                whole_part = abs(self._numerator) // abs(self._denominator)
+                remainder = abs(self._numerator) % abs(self._denominator)
+                whole_part *= -1
+                if remainder == 0:
+                    return str(whole_part)
+                else:
+                    return f"{whole_part} {remainder}/{self._denominator}"
+        elif self._numerator > 0 and self._denominator < 0:
+                whole_part = abs(self._numerator) // abs(self._denominator)
+                remainder = abs(self._numerator) % abs(self._denominator)
+                whole_part *= -1
+                if remainder == 0:
+                    return str(whole_part)
+                else:
+                    return f"{whole_part} {remainder}/{self._denominator}"
         else:
             whole_part = self._numerator // self._denominator
-            remainder = abs(self._numerator) % abs(self._denominator)
+            remainder = self._numerator % self._denominator
             if remainder == 0:
                 return str(whole_part)
             else:
@@ -297,6 +313,9 @@ class Fraction:
 
 
 if __name__ == '__main__':
+    f1 = Fraction(-1, 2)
+    f2 = Fraction(-1, -3)
+    print(f1/f2)
     import doctest
 
     doctest.testmod()
