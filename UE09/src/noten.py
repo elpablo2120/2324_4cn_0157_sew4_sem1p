@@ -23,7 +23,7 @@ def read_xml_file(file_path):
             data[tag].extend(matches)
 
     # Convert data to DataFrame
-    df = pd.DataFrame(data, columns=['Nummer', 'Anrede', 'Vorname', 'Nachname', 'Geburtsdatum', 'Verhalten'])
+    df = pd.DataFrame(data, columns=['Nummer', 'Anrede', 'Vorname', 'Nachname', 'Geburtsdatum', 'Verhalten', 'ue', 'e', 'RK', 'D', 'E', 'GGP', 'WIR', 'BSP', 'AM', 'NW', 'SEW', 'ITP', 'INSI', 'NWT'])
     return df
 
 def main():
