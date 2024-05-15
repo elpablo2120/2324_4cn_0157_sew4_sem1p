@@ -1,22 +1,43 @@
+"""
+__author__ = "Paul Waldecker"
+__email__ = "0157@htl.rennweg.at"
+__version__ = "1.6"
+__copyright__ = "Copyright 2024"
+__license__ = "GPL"
+__status__ = "Ready to Review"
+"""
 import argparse
 import pandas as pd
 import sys
 import re
 
 
-def build_regex_tag(line):
-    # Extract the tag name from the line
+def build_regex_tag(line: str):
+    """
+    Extract a tag name from a line and build a regex pattern for it.
+    :param line: input line
+    :return: Regex for pattern and tag name
+    >>> build_regex_tag('<Nummer>123</Nummer>')
+    ('<Nummer>(.*?)<\\\/Nummer>', 'Nummer')
+    """
     tag = re.search(r'<(.*?)>', line).group(1)
-    # Build a regex pattern for the tag
     regex_pattern = fr'<{tag}>(.*?)<\/{tag}>'
     return regex_pattern, tag
 
 
-def read_xml_file(file_path) -> pd.DataFrame:
+def read_xml_file(file_path: str) -> pd.DataFrame:
+    """
+    Read an XML file and convert it to a DataFrame. Uses build_regex_tag.
+    :param file_path: Path to .xml
+    :return: DataFrame with extracted data
+    >>> df_xml = read_xml_file('test_data_xml.xml')
+    >>> print(df_xml.to_string(index=False))
+    Nummer Anrede Vorname Nachname Geburtsdatum
+      4774   Frau   Emily   Sommer   2006-10-05
+    """
     with open(file_path, 'r') as f:
         xml_data = f.read()
 
-    # Extract data from the XML
     data = {tag: [] for tag in set(re.findall(r'<(.*?)>', xml_data))}
     for line in xml_data.splitlines():
         regex_pattern, tag = build_regex_tag(line)
@@ -24,22 +45,28 @@ def read_xml_file(file_path) -> pd.DataFrame:
         if matches:
             data[tag].extend(matches)
 
-    # Convert data to DataFrame
     df = pd.DataFrame(data, columns=['Nummer', 'Anrede', 'Vorname', 'Nachname', 'Geburtsdatum'], dtype=str)
     return df
 
 
-# eine Regex Methode wäre es
-# auch überprüfen auf datei
-def read_csv_file(file_path) -> pd.DataFrame:
+def read_csv_file(file_path: str) -> pd.DataFrame:
+    """
+    Read a CSV file and convert it to a DataFrame.
+    :param file_path: Path to .csv
+    :return: DataFrame with extracted data
+    >>> df_csv = read_csv_file('test_data_csv.csv')
+    >>> print(df_csv.to_string(index=False))
+    Nummer Verhalten ue  e RK D E GGP WIR BSP AM NW SEW ITP INSI NWT
+      4774        SZ  0 40  1 2 1   1   1   1  1  1   1   1    1   1
+    """
     df = pd.read_csv(file_path, sep=';', dtype=str)
     return df
 
-
-# Eine Methode die zwei DataFrames zusammenführt am index 0
-
-
 def main():
+    """
+    Main function which provides argparser and calls the other functions (read_csv_file, read_xml_file, build_regex_tag)
+    :return: None
+    """
     parser = argparse.ArgumentParser(description='noten.py by Max Mustermann / HTL Rennweg')
     parser.add_argument('outfile', type=str, help='Ausgabedatei (z.B. result.csv)')
     parser.add_argument('-n', type=str, help='csv-Datei mit den Noten')
@@ -60,10 +87,8 @@ def main():
             df_csv = read_csv_file(args.n)
 
             if args.f:
-                # Überprüfen, ob der angegebene Gegenstand in den Spalten der CSV-Datei vorhanden ist
                 if args.f not in df_csv.columns:
                     raise ValueError(f"Gegenstand '{args.f}' nicht in den Spalten der CSV-Datei gefunden.")
-                # Filtern der CSV-Daten nach dem angegebenen Gegenstand
                 df_csv = df_csv[['Nummer', args.f]]
 
             df_xml.set_index(args.m, inplace=True)
@@ -84,7 +109,6 @@ def main():
             if not args.quiet:
                 print("Bitte geben Sie sowohl eine CSV- als auch eine XML-Datei an.")
     except Exception as e:
-        if not args.quiet:
             print("Fehler:", e, file=sys.stderr)
 
 
