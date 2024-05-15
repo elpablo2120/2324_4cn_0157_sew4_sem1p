@@ -10,6 +10,7 @@ import argparse
 import pandas as pd
 import sys
 import re
+import os.path
 
 
 def build_regex_tag(line: str):
@@ -51,7 +52,7 @@ def read_xml_file(file_path: str) -> pd.DataFrame:
 
 def read_csv_file(file_path: str) -> pd.DataFrame:
     """
-    Read a CSV file and convert it to a DataFrame.
+    Read a CSV file and convert it to a DataFrame. This fuction is just for good-looking
     :param file_path: Path to .csv
     :return: DataFrame with extracted data
     >>> df_csv = read_csv_file('test_data_csv.csv')
@@ -61,6 +62,7 @@ def read_csv_file(file_path: str) -> pd.DataFrame:
     """
     df = pd.read_csv(file_path, sep=';', dtype=str)
     return df
+
 
 def main():
     """
@@ -81,7 +83,12 @@ def main():
 
     args = parser.parse_args()
 
-    try:
+    if not os.path.exists(args.n):
+        sys.stderr.write(args.n + ": " + os.strerror(2))
+    elif not os.path.exists(args.n):
+        sys.stderr.write(args.s + ": " + os.strerror(2))
+    else:
+
         if args.n and args.s:
             df_xml = read_xml_file(args.s)
             df_csv = read_csv_file(args.n)
@@ -108,8 +115,6 @@ def main():
         else:
             if not args.quiet:
                 print("Bitte geben Sie sowohl eine CSV- als auch eine XML-Datei an.")
-    except Exception as e:
-            print("Fehler:", e, file=sys.stderr)
 
 
 if __name__ == "__main__":
