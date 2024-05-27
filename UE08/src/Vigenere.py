@@ -23,6 +23,7 @@ class Vigenere:
         """
         self.__key = key
 
+    @property
     def get_key(self) -> str:
         """
         Diese Methode gibt den Schlüssel zurück.
@@ -31,7 +32,7 @@ class Vigenere:
         """
         return self.__key
 
-    key: chr = property(get_key)
+    #key: chr = property(get_key)
 
     def encrypt(self, plaintext: str, key: str = None) -> str:
         """

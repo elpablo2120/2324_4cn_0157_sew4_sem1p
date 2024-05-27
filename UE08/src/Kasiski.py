@@ -6,9 +6,7 @@ __copyright__ = "Copyright 2024"
 __license__ = "GPL"
 __status__ = "Finished"
 """
-
-
-
+from builtins import str
 from collections import Counter
 from Caesar import Caesar
 from Vigenere import Vigenere
@@ -26,6 +24,7 @@ class Kasiski:
         """
         self.__crypttext = crypttext
 
+    @property
     def get_crypttext(self) -> str:
         """
         Diese Methode gibt den Crypttext zurück.
@@ -34,7 +33,7 @@ class Kasiski:
         """
         return self.__crypttext
 
-    crypttext: str = property(get_crypttext)
+    #crypttext: str = property(get_crypttext)
 
     def allpos(self, text: str, teilstring: str) -> list[int]:
         """
