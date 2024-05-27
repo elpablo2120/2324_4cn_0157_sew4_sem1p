@@ -33,7 +33,8 @@ class Caesar:
     # key: chr = property(get_key)
 
     def to_lowercase_letter_only(self, plaintext: str) -> str:
-        """Wandelt den plaintext in Kleinbuchstaben um und entfernt alle Zeichen, die keine
+        """
+        Wandelt den plaintext in Kleinbuchstaben um und entfernt alle Zeichen, die keine
         Kleinbuchstaben aus dem Bereich [a..z] sind.
         >>> caesar = Caesar()
         >>> caesar.to_lowercase_letter_only("Wandelt den plaintext in Kleinbuchstaben um und entfernt alle Zeichen, die keine Kleinbuchstaben aus dem Bereich [a..z] sind.")
@@ -65,7 +66,7 @@ class Caesar:
         for i in range(len(plaintext)):
             if plaintext[i].isalpha():
                 plaintext = plaintext[:i] + chr((ord(plaintext[i]) + (ord(key) - 97) - 97) % 26 + 97) + plaintext[
-                                                                                                        i + 1:]
+                                                                                                i + 1:]
 
         return plaintext
 
@@ -94,6 +95,7 @@ class Caesar:
 
     def crack(self, crypttext: str, elements: int = 1) -> list[str]:
         """
+        Diese Methode liefert die Wahrscheinlichsten Schlüssel zurück. '_' ist throw away Variable.
         >>> str = 'Vor einem großen Walde wohnte ein armer Holzhacker mit seiner Frau und seinen zwei Kindern; das Bübchen hieß Hänsel und das Mädchen Gretel. Er hatte wenig zu beißen und zu brechen, und einmal, als große Teuerung ins Land kam, konnte er das tägliche Brot nicht mehr schaffen. Wie er sich nun abends im Bette Gedanken machte und sich vor Sorgen herumwälzte, seufzte er und sprach zu seiner Frau: "Was soll aus uns werden? Wie können wir unsere armen Kinder ernähren da wir für uns selbst nichts mehr haben?"'
         >>> caesar = Caesar()
         >>> caesar.crack(str)
@@ -113,3 +115,6 @@ class Caesar:
 
         return [self.decrypt(key, 'e') for key, _ in
                 Counter(self.to_lowercase_letter_only(crypttext)).most_common(elements)]
+
+
+

@@ -14,8 +14,6 @@ from Vigenere import Vigenere
 
 class Kasiski:
 
-
-
     def __init__(self, crypttext: str = ""):
         """
         Konstruktor
@@ -24,6 +22,7 @@ class Kasiski:
         """
         self.__crypttext = crypttext
 
+    @property
     def get_crypttext(self) -> str:
         """
         Diese Methode gibt den Crypttext zurück.
@@ -32,7 +31,7 @@ class Kasiski:
         """
         return self.__crypttext
 
-    crypttext: str = property(get_crypttext)
+    #crypttext: str = property(get_crypttext)
 
     def allpos(self, text: str, teilstring: str) -> list[int]:
         """
@@ -80,6 +79,12 @@ class Kasiski:
         """
         return {(text[i:i + laenge], j - i) for i in range(len(text) - laenge + 1) for j in range(i + laenge, len(text))
                 if text[i:i + laenge] == text[j:j + laenge]}
+
+    # for i in range(len(text) - laenge + 1)
+    #   for j in range(i + laenge, len(text))
+    #       if text[i:i + laenge] == text[j:j + laenge]
+    #           (text[i:i + laenge], j - i)
+
 
     def dist_n_list(self, text: str, laenge: int) -> list[int]:
         """
@@ -146,22 +151,20 @@ class Kasiski:
         'aaaaa'
         """
         c = Caesar()
-        crypttxt = c.to_lowercase_letter_only(self.crypttext)
+        crypttxt = c.to_lowercase_letter_only(self.__crypttext)
 
         partstr = [self.get_nth_letter(crypttxt, i, len) for i in range(len)]
 
         return ''.join([c.crack(partstr[i], 1)[0] for i in range(len)])
 
 
-
-
 if __name__ == "__main__":
-    #Attacke auf Vigenere
+    # Attacke auf Vigenere
     v = Vigenere()
     str = "Die geheime Botschaft, die ich Ihnen übermitteln muss, ist von äußerster Wichtigkeit und erfordert höchste Diskretion. Bitte nehmen Sie sich einen Moment Zeit, um diese Nachricht sorgfältig zu lesen und die Anweisungen genau zu befolgen. Unsere Zusammenarbeit und der Erfolg unserer Mission hängen davon ab. Zuerst möchte ich Sie darüber informieren, dass wir dringend ein Treffen benötigen. Dieses Treffen soll um Mitternacht stattfinden, an einem Ort, den wir im Voraus festgelegt haben. Die genauen Koordinaten werden Ihnen zu gegebener Zeit mitgeteilt. Es ist von größter Bedeutung, dass Sie pünktlich und unerkannt erscheinen.Zudem ist es unerlässlich, dass Sie den Schlüssel mitbringen. Dieser Schlüssel ist nicht nur physischer Natur, sondern symbolisiert auch die Verbindung zwischen unseren Bemühungen und dem Erfolg unserer Operation. Bewahren Sie ihn sicher auf und teilen Sie ihn mit niemandem. Bitte seien Sie äußerst wachsam und achten Sie auf verdächtige Aktivitäten. Unsere Feinde sind überall und wir müssen sicherstellen, dass wir nicht von ihnen belauscht oder entdeckt werden. Jegliche Unregelmäßigkeiten müssen sofort gemeldet werden.Das vereinbarte Zeichen wird Ihnen helfen, uns zu identifizieren. Bitte beachten Sie es sorgfältig und verwenden Sie es, um sich zu vergewissern, dass Sie mit der richtigen Person sprechen.Ich vertraue darauf, dass Sie diese Anweisungen verstehen und umsetzen können. Unsere gemeinsamen Ziele erfordern Zusammenarbeit und Engagement. Möge der Erfolg auf unserer Seite sein. Bis bald, und bleiben Sie wachsam."
     x = v.encrypt(str, "gustavo")
     k = Kasiski(x)
-    len = k.ggt_count([k.dist_n_list(x, i) for i in range(3,10)][0]).most_common(1)[0][0]
+    len = k.ggt_count([k.dist_n_list(x, i) for i in range(3, 10)][0]).most_common(1)[0][0]
     key = k.crack_key(len)
     print(x)
 
