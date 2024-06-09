@@ -20,3 +20,8 @@ if __name__ == '__main__':
     t1 = Test("Hallo")
     t1.text = "Welt"
     print(t1)
+
+
+import argparse
+parser = argparse.ArgumentParser(description="Demo Argparser by WAL / HTL Rennweg")
+args = parser.parse_args()
