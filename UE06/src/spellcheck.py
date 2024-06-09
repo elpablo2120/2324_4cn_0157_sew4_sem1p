@@ -134,3 +134,8 @@ def correct(word: str, alle_woerter: List[str]) -> Set[str]:
         corrections_edit1 = edit1_good(word, alle_woerter)
         corrections_edit2 = edit2_good(word, alle_woerter)
         return corrections_edit1 or corrections_edit2 or {word}
+
+if __name__ == '__main__':
+    alle_woerter = read_all_words('/Users/paulwaldecker/Desktop/HTL3R/4CN/SEW/Angaben/06_py_comprehension/de-en.txt')
+    ok = correct("Katzis", alle_woerter)
+    print(ok)
