@@ -23,23 +23,36 @@ FIRST_100_PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
 
 def is_prime(number):
     """
-    Teste die ersten 100 Primzahlen auf Primzahl.
+    Überprüft, ob die gegebene Zahl eine Primzahl ist. Indem sie sie durch die ersten 100 Primzahlen teilt und den
+    Miller-Rabin-Test anwendet.
+    :param number: Die zu überprüfende Zahl.
+    :return: True, wenn die Zahl eine Primzahl ist, False sonst.
+    >>> is_prime(557)
+    True
+    >>> is_prime(12)
+    False
     """
     for prime in FIRST_100_PRIMES:
         if number % prime == 0:
             return number == prime
-
     return is_prim_millerrabin(number) == "probably prime"
-
 
 def is_prim_millerrabin(number, iterations=20):
     """
-    Teste die ersten 100 Primzahlen auf Primzahl mittels Miller-Rabin-Test. Mindestens 20 Iterationen.
+    Führt den Miller-Rabin-Primzahltest für die gegebene Zahl aus, um zu bestimmen, ob sie wahrscheinlich eine Primzahl
+    ist.
+    :param number: Die zu überprüfende Zahl.
+    :param iterations: Die Anzahl der Iterationen für den Test. Je mehr Iterationen, desto zuverlässiger ist das
+    Ergebnis. Standardmäßig auf 20 gesetzt.
+    :return: "probably prime", wenn die Zahl wahrscheinlich eine Primzahl ist, "composite" sonst.
+    >>> is_prim_millerrabin(557)
+    'probably prime'
+    >>> is_prim_millerrabin(12)
+    'composite'
     """
     if number % 2 == 0 or number < 2:
         return "composite"
 
-    # number - 1 = odd_part*2^exponent - 1
     exponent, odd_part = 0, number - 1
     while odd_part % 2 == 0:
         odd_part //= 2
@@ -47,13 +60,17 @@ def is_prim_millerrabin(number, iterations=20):
 
     def is_composite(base, odd_part, number, exponent):
         """
-        Teste, ob die Zahl zusammengesetzt ist.
-
-        :param base: Basis
-        :param odd_part: ungerader Teil von number - 1
-        :param number: Die zu testende Zahl
-        :param exponent: Exponent der die Zahl in die Form number - 1 = odd_part*2^exponent - 1 bringt
-        :return: True, wenn die Zahl zusammengesetzt ist, sonst False
+        Überprüft, ob eine gegebene Basis (base) und eine gegebene ungerade Zahl (odd_part) ein Zeuge für die
+        Zusammengesetztheit der Zahl (number) sind, basierend auf dem Miller-Rabin-Primzahltest.
+        :param base: Die zu überprüfende Basis.
+        :param odd_part: Die ungerade Teilzahl (odd_part * 2^exponent) der gegebenen Zahl (number).
+        :param number: Die zu überprüfende Zahl.
+        :param exponent: Der Exponent, der die Potenz von 2 in der ungeraden Teilzahl darstellt.
+        :return: True, wenn die Zahl wahrscheinlich zusammengesetzt ist, False sonst.
+        >>> is_composite(2, 278, 561, 8)
+        True
+        >>> is_composite(3, 278, 561, 8)
+        False
         """
         base_power = pow(base, odd_part, number)
         if base_power in (1, number - 1):
@@ -74,7 +91,14 @@ def is_prim_millerrabin(number, iterations=20):
 
 def generate_prime(bit_length):
     """
-    Generiere eine Primzahl mit einer bestimmten Bitlänge.
+    Generiert eine Primzahl mit einer bestimmten Bitlänge. Die Funktion verwendet den Miller-Rabin-Primzahltest,
+    um zu überprüfen, ob eine generierte Zahl eine Primzahl ist. Wenn die generierte Zahl keine Primzahl ist,
+    wird eine neue Zahl generiert und getestet, bis eine Primzahl gefunden wird.
+    :param bit_length: Die Bitlänge der zu generierenden Primzahl. Die generierte Primzahl wird genau diese Bitlänge haben.
+    :return: Eine Primzahl mit der angegebenen Bitlänge.
+    >>> a = generate_prime(512)
+    >>> is_prime(a)
+    True
     """
     while True:
         prime_candidate = random.getrandbits(bit_length)
