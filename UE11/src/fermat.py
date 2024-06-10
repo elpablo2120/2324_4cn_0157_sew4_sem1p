@@ -9,12 +9,6 @@ __status__ = "In Progress"
 
 from collections import Counter
 
-"""
-Berechne (in Python) für jede der Primzahlen p = 2 bis p = 11 und p = 997:
-• für jeweils jedes Element a (ohne 0) von Zp (d.h. Restklasse p bzw. ... mod p, a = 1...p − 1
-– den Wert a^p−1 in Zp.
-"""
-
 
 def fermat(p):
     """
