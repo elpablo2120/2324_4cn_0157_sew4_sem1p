@@ -4,60 +4,71 @@ __email__ = "0157@htl.rennweg.at"
 __version__ = "0.1"
 __copyright__ = "Copyright 2024"
 __license__ = "GPL"
-__status__ = "In Progress"
+__status__ = "Ready to Review"
 """
 
-# Keys erzeugen generate_keys(number_of_bits)
-# Datei: rsa.py
-# Parameter: gewünschte Länge des Keys in bits bzw. welche Blockgröße soll beim Verschlüsseln verwendet werden8.
-# 7Zwischenergebnis speichern! nicht zwei rekursive Ausfrufe mit dem selben Wert
-# 8da ist ein kleiner Unterschied, wir nehmen die zweite Definition
-# Vorgehen:
-# • zwei Primzahlen p, q erzeugen, etwa mit der halben Anzahl an Bits9
-# – die halbe Anzahl ist natürlich eine Einschränkung, andererseits gibt es10 ca. 2 ⋅ 10151 Primzahlen mit einer
-# Länge von 512 Bit.
-# • bestimme n = p*q
-# – n muss mehr als die erforderliche Anzahl an Bits haben!11
-# – Kontrolle: n.bit_length() > Blockgröße
-# • bestimme e: große Zufallszahl. Diese muss teilerfremd zu 𝜑(𝑛) = (𝑝 − 1) ⋅ (𝑞 − 1) sein12!
-# • bestimme d = ModInverse(e, (p-1)*(q-1)) = die multiplikativ Inverse zu 𝑒 mod 𝜑(𝑛).
-# – Es muss daher folgende Gleichung gelten: 𝑒 ⋅ 𝑑 = 1 mod 𝜑(𝑛).
-# – Tipp: Dokumentation zu pow()13 oder Extended Euclidean algorithm bzw. fast mod inverse
-# • Ergebnis ist ein Tupel: (private key, public key)
-# – jeder Key besteht aus ( e bzw. d, n, keylen)14
-# Ultimativer Test – als doctest:
-# for x in [ ...a lot of numbers, small and large...]:
-# c = pow(x, e, n)
-# y = pow(c, d, n)
-# assert x == y
-
 import random
+
 import miller_rabin
+import math
 
 
-def generate_prime(bit_length):
+def generate_prime(bit_length: int) -> int:
+    """
+    Generiert eine Primzahl mit der angegebenen Bit-Länge.
+    :param bit_length: Länge der Primzahl in Bit
+    :return: Primzahl
+    >>> p = generate_prime(4)
+    >>> isinstance(p, int)
+    True
+    >>> miller_rabin.is_prime(p)
+    True
+    >>> p.bit_length()
+    4
+    """
     p = 4
-    # Keep generating until a prime is found
     while not miller_rabin.is_prime(p):
-        # Generate random bits
         p = random.getrandbits(bit_length)
-        # Apply a mask to set MSB and LSB to 1 to ensure prime candidate is of correct bit length
         p |= (1 << bit_length - 1) | 1
     return p
 
 
 def ggt(x: int, y: int) -> int:
+    """
+    Berechnet den größten gemeinsamen Teiler von x und y.
+    :param x: Zahl 1
+    :param y: Zahl 2
+    :return: größter gemeinsamer Teiler der beiden Zahlen
+    >>> ggt(12, 15)
+    3
+    >>> ggt(12, 0)
+    12
+    >>> ggt(0, 15)
+    15
+    """
     while y != 0:
         x, y = y, x % y
     return x
 
 
 def generate_keys(number_of_bits):
-    n = 0
-    while n.bit_length() <= number_of_bits:
-        p = generate_prime((number_of_bits // 2) + 1)
+    """
+    Generiert einen privaten und einen öffentlichen Schlüssel für RSA.
+    :param number_of_bits: Anzahl der Bits
+    :return: Tuple mit privatem und öffentlichem Schlüssel und deren bit-Länge
+    >>> (e, n, _), (d, _, _) = generate_keys(1024)
+    >>> random_numbers = [random.getrandbits(1024) for _ in range(10)]
+    >>> for x in random_numbers:
+    ...    c = pow(x, e, n)
+    ...    y = pow(c, d, n)
+    ...    assert x == y
+    """
+    while True:
+        p = generate_prime(math.ceil(number_of_bits / 2) + 1)
         q = generate_prime(number_of_bits // 2)
         n = p * q
+        if n.bit_length() > number_of_bits:
+            break
 
     phi_n = (p - 1) * (q - 1)
     e = random.getrandbits(number_of_bits)
@@ -72,6 +83,3 @@ def generate_keys(number_of_bits):
     private_key = (d, n, d.bit_length())
 
     return (private_key, public_key)
-
-
-print(generate_keys(4))
